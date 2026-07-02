@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setToken, setUser, logout as logoutAction } from '@features/auth/authSlice'
 import { useLoginMutation, useSignupMutation } from '@services/authApi'
+import { mapApiError } from '@utils/errorMapper'
 import type { RootState } from '@app/store'
 import type { LoginRequest, SignupRequest } from '../types'
 
@@ -24,7 +25,9 @@ export const useAuth = () => {
         return response
       } catch (err) {
         console.error('Login error:', err)
-        throw err
+        const friendlyMessage = mapApiError(err)
+        const error = new Error(friendlyMessage)
+        throw error
       }
     },
     [loginMutation, dispatch, navigate]
@@ -40,7 +43,9 @@ export const useAuth = () => {
         return response
       } catch (err) {
         console.error('Signup error:', err)
-        throw err
+        const friendlyMessage = mapApiError(err)
+        const error = new Error(friendlyMessage)
+        throw error
       }
     },
     [signupMutation, dispatch, navigate]

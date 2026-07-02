@@ -30,7 +30,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.LoginRequest"
                         }
                     }
                 ],
@@ -38,28 +38,25 @@
                     "200": {
                         "description": "JWT token",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_REQUEST",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized - Possible codes: INVALID_CREDENTIAL",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR, INTERNAL_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -85,27 +82,45 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreatePaymentRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CreatePaymentRequest"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Payment created successfully",
                         "schema": {
-                            "$ref": "#/definitions/dto.PaymentResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - INVALID_REQUEST",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -132,21 +147,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Payment details",
                         "schema": {
-                            "$ref": "#/definitions/dto.PaymentResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - INVALID_FORMAT",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Payment not found",
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -178,27 +199,39 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Payment status updated",
                         "schema": {
-                            "$ref": "#/definitions/dto.PaymentResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_FORMAT, INVALID_PARAMETER",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Payment not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -218,13 +251,19 @@
                     "200": {
                         "description": "List of plans. Each plan's image field contains base64-encoded binary data or is omitted if no image.",
                         "schema": {
-                            "$ref": "#/definitions/dto.ListPlansResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.ListPlansResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -248,7 +287,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreatePlanRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CreatePlanRequest"
                         }
                     }
                 ],
@@ -256,19 +295,25 @@
                     "201": {
                         "description": "Plan created successfully. Image field in response contains base64-encoded binary data.",
                         "schema": {
-                            "$ref": "#/definitions/dto.PlanResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.PlanResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Invalid base64 image format",
+                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -297,19 +342,31 @@
                     "200": {
                         "description": "Plan details. Image field contains base64-encoded binary data or omitted if no image.",
                         "schema": {
-                            "$ref": "#/definitions/dto.PlanResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.PlanResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Plan not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -340,7 +397,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdatePlanRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.UpdatePlanRequest"
                         }
                     }
                 ],
@@ -348,25 +405,37 @@
                     "200": {
                         "description": "Plan updated. Image field in response contains base64-encoded binary data or omitted if no image.",
                         "schema": {
-                            "$ref": "#/definitions/dto.PlanResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.PlanResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Invalid base64 image format",
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER, INVALID_REQUEST, INVALID_FORMAT",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Plan not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -399,16 +468,34 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Plan not found",
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -437,19 +524,19 @@
                     "200": {
                         "description": "Store details",
                         "schema": {
-                            "$ref": "#/definitions/dto.StoreResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.StoreResponse"
                         }
                     },
                     "404": {
-                        "description": "Store not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -478,19 +565,19 @@
                     "200": {
                         "description": "Store plans with images. Each plan's 'image' field contains base64-encoded binary data or is omitted if no image.",
                         "schema": {
-                            "$ref": "#/definitions/dto.StorePlansResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.StorePlansResponse"
                         }
                     },
                     "404": {
-                        "description": "Store not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -510,13 +597,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ListSubscribersResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.ListSubscribersResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -540,7 +633,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateSubscriberRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CreateSubscriberRequest"
                         }
                     }
                 ],
@@ -548,19 +641,25 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriberResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriberResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -589,19 +688,37 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriberResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriberResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Subscriber not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -632,7 +749,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateSubscriberRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.UpdateSubscriberRequest"
                         }
                     }
                 ],
@@ -640,25 +757,37 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriberResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriberResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER, INVALID_REQUEST, INVALID_FORMAT",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Subscriber not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -691,16 +820,34 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Subscriber not found",
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -720,13 +867,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ListSubscriptionsResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.ListSubscriptionsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -750,7 +903,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateSubscriptionRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CreateSubscriptionRequest"
                         }
                     }
                 ],
@@ -758,19 +911,25 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriptionResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -799,19 +958,37 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriptionResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Subscription not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -848,25 +1025,37 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriptionResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Subscription not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -899,7 +1088,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CancelSubscriptionRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CancelSubscriptionRequest"
                         }
                     }
                 ],
@@ -907,19 +1096,37 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.SubscriptionResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Subscription not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -946,15 +1153,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "List of payments",
                         "schema": {
-                            "$ref": "#/definitions/dto.ListPaymentsResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -980,15 +1193,15 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "List of users",
                         "schema": {
-                            "$ref": "#/definitions/dto.ListUserResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -1012,30 +1225,27 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUserRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.CreateUserRequest"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Success message",
+                        "description": "User created successfully",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -1062,21 +1272,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "User details",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "User not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -1107,33 +1323,33 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateUserRequest"
+                            "$ref": "#/definitions/minha-assinatura_internal_dto.UpdateUserRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "User updated successfully",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - Possible codes: INVALID_FORMAT, INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "User not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -1158,24 +1374,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success message",
+                        "description": "User deleted successfully",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "schema": {
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "User not found",
+                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     }
                 }
@@ -1183,7 +1402,7 @@
         }
     },
     "definitions": {
-        "dto.CancelSubscriptionRequest": {
+        "minha-assinatura_internal_dto.CancelSubscriptionRequest": {
             "type": "object",
             "properties": {
                 "reason": {
@@ -1191,7 +1410,7 @@
                 }
             }
         },
-        "dto.CreatePaymentRequest": {
+        "minha-assinatura_internal_dto.CreatePaymentRequest": {
             "type": "object",
             "required": [
                 "amount",
@@ -1209,7 +1428,7 @@
                 }
             }
         },
-        "dto.CreatePlanRequest": {
+        "minha-assinatura_internal_dto.CreatePlanRequest": {
             "type": "object",
             "required": [
                 "billing_cycle",
@@ -1242,7 +1461,7 @@
                 }
             }
         },
-        "dto.CreateSubscriberRequest": {
+        "minha-assinatura_internal_dto.CreateSubscriberRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -1259,7 +1478,7 @@
                 }
             }
         },
-        "dto.CreateSubscriptionRequest": {
+        "minha-assinatura_internal_dto.CreateSubscriptionRequest": {
             "type": "object",
             "required": [
                 "plan_id",
@@ -1281,7 +1500,7 @@
                 }
             }
         },
-        "dto.CreateUserRequest": {
+        "minha-assinatura_internal_dto.CreateUserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1304,62 +1523,40 @@
                 }
             }
         },
-        "dto.ListPaymentsResponse": {
-            "type": "object",
-            "properties": {
-                "payments": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.PaymentResponse"
-                    }
-                }
-            }
-        },
-        "dto.ListPlansResponse": {
+        "minha-assinatura_internal_dto.ListPlansResponse": {
             "type": "object",
             "properties": {
                 "plans": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.PlanResponse"
+                        "$ref": "#/definitions/minha-assinatura_internal_dto.PlanResponse"
                     }
                 }
             }
         },
-        "dto.ListSubscribersResponse": {
+        "minha-assinatura_internal_dto.ListSubscribersResponse": {
             "type": "object",
             "properties": {
                 "subscribers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.SubscriberResponse"
+                        "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriberResponse"
                     }
                 }
             }
         },
-        "dto.ListSubscriptionsResponse": {
+        "minha-assinatura_internal_dto.ListSubscriptionsResponse": {
             "type": "object",
             "properties": {
                 "subscriptions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.SubscriptionResponse"
+                        "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
                     }
                 }
             }
         },
-        "dto.ListUserResponse": {
-            "type": "object",
-            "properties": {
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.UserResponse"
-                    }
-                }
-            }
-        },
-        "dto.LoginRequest": {
+        "minha-assinatura_internal_dto.LoginRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1370,33 +1567,7 @@
                 }
             }
         },
-        "dto.PaymentResponse": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "gateway_transaction_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "paid_at": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "subscription_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.PlanResponse": {
+        "minha-assinatura_internal_dto.PlanResponse": {
             "type": "object",
             "properties": {
                 "active": {
@@ -1435,7 +1606,7 @@
                 }
             }
         },
-        "dto.StorePlanResponse": {
+        "minha-assinatura_internal_dto.StorePlanResponse": {
             "type": "object",
             "properties": {
                 "billing_cycle": {
@@ -1462,13 +1633,13 @@
                 }
             }
         },
-        "dto.StorePlansResponse": {
+        "minha-assinatura_internal_dto.StorePlansResponse": {
             "type": "object",
             "properties": {
                 "plans": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.StorePlanResponse"
+                        "$ref": "#/definitions/minha-assinatura_internal_dto.StorePlanResponse"
                     }
                 },
                 "store": {
@@ -1476,7 +1647,7 @@
                 }
             }
         },
-        "dto.StoreResponse": {
+        "minha-assinatura_internal_dto.StoreResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -1502,7 +1673,7 @@
                 }
             }
         },
-        "dto.SubscriberResponse": {
+        "minha-assinatura_internal_dto.SubscriberResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -1525,7 +1696,7 @@
                 }
             }
         },
-        "dto.SubscriptionResponse": {
+        "minha-assinatura_internal_dto.SubscriptionResponse": {
             "type": "object",
             "properties": {
                 "cancelled_at": {
@@ -1547,6 +1718,7 @@
                     "type": "string"
                 },
                 "status": {
+                    "description": "active, cancelled",
                     "type": "string"
                 },
                 "subscriber_id": {
@@ -1557,7 +1729,7 @@
                 }
             }
         },
-        "dto.UpdatePlanRequest": {
+        "minha-assinatura_internal_dto.UpdatePlanRequest": {
             "type": "object",
             "properties": {
                 "active": {
@@ -1584,7 +1756,7 @@
                 }
             }
         },
-        "dto.UpdateSubscriberRequest": {
+        "minha-assinatura_internal_dto.UpdateSubscriberRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1598,7 +1770,7 @@
                 }
             }
         },
-        "dto.UpdateUserRequest": {
+        "minha-assinatura_internal_dto.UpdateUserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1618,41 +1790,32 @@
                 }
             }
         },
-        "dto.UserResponse": {
+        "minha-assinatura_internal_responses.ErrorDetail": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "code": {
                     "type": "string"
                 },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "store_link": {
-                    "type": "string"
-                },
-                "store_name": {
-                    "type": "string"
-                },
-                "updated_at": {
+                "detail": {
                     "type": "string"
                 }
             }
         },
-        "responses.ErrorResponse": {
+        "minha-assinatura_internal_responses.ErrorResponse": {
             "type": "object",
             "properties": {
-                "error": {
-                    "type": "string"
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorDetail"
+                    }
                 }
+            }
+        },
+        "minha-assinatura_internal_responses.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {}
             }
         }
     },

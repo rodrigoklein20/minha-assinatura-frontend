@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@hooks/useAuth'
+import { useI18n } from '@hooks/useI18n'
 import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { validators } from '@utils/validators'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ export default function SignupPage() {
   const [localError, setLocalError] = useState('')
   const { signup, loading } = useAuth()
   const { notifications, show, remove } = useNotification()
+  const t = useI18n()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -25,21 +28,58 @@ export default function SignupPage() {
     e.preventDefault()
     setLocalError('')
 
-    if (!formData.name || !formData.email || !formData.password || !formData.store_name || !formData.store_link) {
-      setLocalError('Preencha todos os campos obrigatórios')
+    // Validações obrigatórias
+    if (!formData.name) {
+      setLocalError(t('validation.nameRequired'))
       return
     }
 
-    if (formData.password.length < 6) {
-      setLocalError('A senha deve ter no mínimo 6 caracteres')
+    if (!formData.email) {
+      setLocalError(t('validation.emailRequired'))
+      return
+    }
+
+    if (!validators.isValidEmail(formData.email)) {
+      setLocalError(t('validation.emailInvalid'))
+      return
+    }
+
+    if (!formData.password) {
+      setLocalError(t('validation.passwordRequired'))
+      return
+    }
+
+    if (!validators.isValidPassword(formData.password)) {
+      setLocalError(t('validation.passwordMinLength'))
+      return
+    }
+
+    if (!formData.store_name) {
+      setLocalError(t('validation.storeNameRequired'))
+      return
+    }
+
+    if (!formData.store_link) {
+      setLocalError(t('validation.storeLinkRequired'))
+      return
+    }
+
+    if (!validators.isValidStoreLink(formData.store_link)) {
+      setLocalError(t('validation.storeLinkInvalid'))
+      return
+    }
+
+    // Validação opcional: telefone (se preenchido, deve ser válido)
+    if (formData.phone && !validators.isValidPhone(formData.phone)) {
+      setLocalError(t('validation.phoneInvalid'))
       return
     }
 
     try {
       await signup(formData)
-      show('Cadastro realizado com sucesso!', 'success')
+      show(t('success.signupSuccess'), 'success')
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao cadastrar'
+      const errorMsg = err?.message || t('errors.DEFAULT')
       setLocalError(errorMsg)
       show(errorMsg, 'error')
     }
@@ -48,8 +88,8 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4 py-8">
       <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Crie sua conta</h1>
-        <p className="text-gray-600 mb-6">Comece sua jornada como profissional</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('auth.signup.title')}</h1>
+        <p className="text-gray-600 mb-6">{t('auth.signup.subtitle')}</p>
 
         {localError && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -59,7 +99,9 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="label">Nome *</label>
+            <label className="label">
+              {t('auth.signup.name')} <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="name"
@@ -72,7 +114,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="label">Email *</label>
+            <label className="label">
+              {t('auth.signup.email')} <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               name="email"
@@ -85,7 +129,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="label">Senha *</label>
+            <label className="label">
+              {t('auth.signup.password')} <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
               name="password"
@@ -95,10 +141,13 @@ export default function SignupPage() {
               placeholder="••••••••"
               disabled={loading}
             />
+            <p className="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
           </div>
 
           <div>
-            <label className="label">Telefone</label>
+            <label className="label">
+              {t('auth.signup.phone')} <span className="text-gray-400 text-xs">({t('auth.signup.optional')})</span>
+            </label>
             <input
               type="tel"
               name="phone"
@@ -111,7 +160,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="label">Nome da Loja *</label>
+            <label className="label">
+              {t('auth.signup.storeName')} <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="store_name"
@@ -124,7 +175,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="label">URL da Loja *</label>
+            <label className="label">
+              {t('auth.signup.storeLink')} <span className="text-red-500">*</span>
+            </label>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">/store/</span>
               <input
@@ -137,6 +190,7 @@ export default function SignupPage() {
                 disabled={loading}
               />
             </div>
+            <p className="text-xs text-gray-500 mt-1">Apenas letras, números, hífen e underscore</p>
           </div>
 
           <button
@@ -144,14 +198,14 @@ export default function SignupPage() {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Cadastrando...' : 'Cadastrar'}
+            {loading ? t('auth.signup.loading') : t('auth.signup.button')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Já tem uma conta?{' '}
+          {t('auth.signup.hasAccount')}{' '}
           <Link to="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
-            Faça login
+            {t('auth.signup.login')}
           </Link>
         </p>
       </div>

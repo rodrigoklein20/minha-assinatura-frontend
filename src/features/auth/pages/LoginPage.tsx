@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@hooks/useAuth'
+import { useI18n } from '@hooks/useI18n'
 import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { validators } from '@utils/validators'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -9,21 +11,33 @@ export default function LoginPage() {
   const [localError, setLocalError] = useState('')
   const { login, loading } = useAuth()
   const { notifications, show, remove } = useNotification()
+  const t = useI18n()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLocalError('')
 
-    if (!email || !password) {
-      setLocalError('Email e senha são obrigatórios')
+    // Validações
+    if (!email) {
+      setLocalError(t('validation.emailRequired'))
+      return
+    }
+
+    if (!validators.isValidEmail(email)) {
+      setLocalError(t('validation.emailInvalid'))
+      return
+    }
+
+    if (!password) {
+      setLocalError(t('validation.passwordRequired'))
       return
     }
 
     try {
       await login({ email, password })
-      show('Login realizado com sucesso!', 'success')
+      show(t('success.loginSuccess'), 'success')
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao fazer login'
+      const errorMsg = err?.message || t('errors.DEFAULT')
       setLocalError(errorMsg)
       show(errorMsg, 'error')
     }
@@ -32,8 +46,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Minha Assinatura</h1>
-        <p className="text-gray-600 mb-6">Faça login em sua conta</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('auth.login.title')}</h1>
+        <p className="text-gray-600 mb-6">{t('auth.login.subtitle')}</p>
 
         {localError && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -43,7 +57,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="label">Email</label>
+            <label className="label">{t('auth.login.email')}</label>
             <input
               type="email"
               value={email}
@@ -55,7 +69,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="label">Senha</label>
+            <label className="label">{t('auth.login.password')}</label>
             <input
               type="password"
               value={password}
@@ -71,14 +85,14 @@ export default function LoginPage() {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Entrando...' : 'Entrar'}
+            {loading ? t('auth.login.loading') : t('auth.login.button')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Não tem uma conta?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link to="/auth/signup" className="text-blue-600 hover:text-blue-700 font-medium">
-            Cadastre-se
+            {t('auth.login.signup')}
           </Link>
         </p>
       </div>
