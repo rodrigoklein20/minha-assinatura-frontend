@@ -9,10 +9,12 @@ export const subscribersApi = createApi({
   endpoints: (builder) => ({
     getSubscribers: builder.query<Subscriber[], void>({
       query: () => '/api/v1/subscribers',
+      transformResponse: (response: { data: Subscriber[] }) => response.data,
       providesTags: ['Subscribers'],
     }),
     getSubscriber: builder.query<Subscriber, string>({
       query: (id) => `/api/v1/subscribers/${id}`,
+      transformResponse: (response: { data: Subscriber }) => response.data,
       providesTags: ['Subscribers'],
     }),
     createSubscriber: builder.mutation<Subscriber, CreateSubscriberRequest>({
@@ -21,6 +23,7 @@ export const subscribersApi = createApi({
         method: 'POST',
         body: data,
       }),
+      transformResponse: (response: { data: Subscriber }) => response.data,
       invalidatesTags: ['Subscribers'],
     }),
     updateSubscriber: builder.mutation<Subscriber, { id: string; data: UpdateSubscriberRequest }>({
@@ -29,6 +32,7 @@ export const subscribersApi = createApi({
         method: 'PUT',
         body: data,
       }),
+      transformResponse: (response: { data: Subscriber }) => response.data,
       invalidatesTags: ['Subscribers'],
     }),
     deleteSubscriber: builder.mutation<void, string>({

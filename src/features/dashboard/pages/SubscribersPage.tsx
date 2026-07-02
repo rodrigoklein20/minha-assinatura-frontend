@@ -1,19 +1,25 @@
 import { useState } from 'react'
 import { useGetSubscribersQuery, useCreateSubscriberMutation, useUpdateSubscriberMutation, useDeleteSubscriberMutation } from '@services/subscribersApi'
-import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { useGetSubscriptionsQuery } from '@services/subscriptionsApi'
+import { useNotification } from '@hooks/useNotification'
+import { useI18n } from '@hooks/useI18n'
 import Modal from '@components/Modal'
 import LoadingSpinner from '@components/LoadingSpinner'
+import { mapApiError } from '@utils/errorMapper'
 import type { Subscriber, CreateSubscriberRequest, UpdateSubscriberRequest } from '../../../types'
 
 export default function SubscribersPage() {
-  const { data: subscribers = [], isLoading } = useGetSubscribersQuery()
+  const t = useI18n()
+  const { show: showNotification } = useNotification()
+  const { data: subscribersData, isLoading } = useGetSubscribersQuery()
+  const subscribers = Array.isArray(subscribersData) ? subscribersData : []
+  const { data: subscriptions = [] } = useGetSubscriptionsQuery()
   const [createSubscriber] = useCreateSubscriberMutation()
   const [updateSubscriber] = useUpdateSubscriberMutation()
   const [deleteSubscriber] = useDeleteSubscriberMutation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingSubscriber, setEditingSubscriber] = useState<Subscriber | null>(null)
   const [formError, setFormError] = useState('')
-  const { notifications, show, remove } = useNotification()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -48,7 +54,7 @@ export default function SubscribersPage() {
     setFormError('')
 
     if (!formData.name) {
-      setFormError('Nome é obrigatório')
+      setFormError(t('validation.nameRequired'))
       return
     }
 
@@ -58,29 +64,30 @@ export default function SubscribersPage() {
         if (formData.email) data.email = formData.email
         if (formData.phone) data.phone = formData.phone
         await updateSubscriber({ id: editingSubscriber.id, data }).unwrap()
-        show('Assinante atualizado!', 'success')
+        showNotification(t('success.subscriberUpdated'), 'success')
       } else {
         const data: CreateSubscriberRequest = { name: formData.name }
         if (formData.email) data.email = formData.email
         if (formData.phone) data.phone = formData.phone
         await createSubscriber(data).unwrap()
-        show('Assinante criado!', 'success')
+        showNotification(t('success.subscriberCreated'), 'success')
       }
       handleCloseModal()
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao salvar'
+      const errorMsg = mapApiError(err)
       setFormError(errorMsg)
-      show(errorMsg, 'error')
+      showNotification(errorMsg, 'error')
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Deletar este assinante?')) {
+    if (confirm(t('subscribers.deleteConfirm'))) {
       try {
         await deleteSubscriber(id).unwrap()
-        show('Assinante deletado!', 'success')
+        showNotification(t('success.subscriberDeleted'), 'success')
       } catch (err: any) {
-        show(err?.data?.error || 'Erro ao deletar', 'error')
+        const errorMsg = mapApiError(err)
+        showNotification(errorMsg, 'error')
       }
     }
   }
@@ -204,8 +211,6 @@ export default function SubscribersPage() {
           </div>
         </form>
       </Modal>
-
-      <NotificationContainer notifications={notifications} onRemove={remove} />
     </div>
   )
 }

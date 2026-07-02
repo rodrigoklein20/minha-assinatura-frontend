@@ -14,10 +14,12 @@ export const subscriptionsApi = createApi({
   endpoints: (builder) => ({
     getSubscriptions: builder.query<Subscription[], void>({
       query: () => '/api/v1/subscriptions',
+      transformResponse: (response: { data: Subscription[] }) => response.data,
       providesTags: ['Subscriptions'],
     }),
     getSubscription: builder.query<Subscription, string>({
       query: (id) => `/api/v1/subscriptions/${id}`,
+      transformResponse: (response: { data: Subscription }) => response.data,
       providesTags: ['Subscriptions'],
     }),
     createSubscription: builder.mutation<Subscription, CreateSubscriptionRequest>({
@@ -26,6 +28,7 @@ export const subscriptionsApi = createApi({
         method: 'POST',
         body: data,
       }),
+      transformResponse: (response: { data: Subscription }) => response.data,
       invalidatesTags: ['Subscriptions'],
     }),
     updateSubscription: builder.mutation<Subscription, { id: string; data: UpdateSubscriptionRequest }>({
@@ -34,6 +37,7 @@ export const subscriptionsApi = createApi({
         method: 'PUT',
         body: data,
       }),
+      transformResponse: (response: { data: Subscription }) => response.data,
       invalidatesTags: ['Subscriptions'],
     }),
     cancelSubscription: builder.mutation<Subscription, { id: string; data: CancelSubscriptionRequest }>({
@@ -42,6 +46,7 @@ export const subscriptionsApi = createApi({
         method: 'POST',
         body: data,
       }),
+      transformResponse: (response: { data: Subscription }) => response.data,
       invalidatesTags: ['Subscriptions'],
     }),
   }),

@@ -3,21 +3,27 @@ import { useGetSubscriptionsQuery } from '@services/subscriptionsApi'
 import { useGetPaymentsQuery, useCreatePaymentMutation, useUpdatePaymentMutation } from '@services/paymentsApi'
 import { useGetPlansQuery } from '@services/plansApi'
 import { useGetSubscribersQuery } from '@services/subscribersApi'
-import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { useNotification } from '@hooks/useNotification'
+import { useI18n } from '@hooks/useI18n'
 import Modal from '@components/Modal'
 import LoadingSpinner from '@components/LoadingSpinner'
+import { mapApiError } from '@utils/errorMapper'
 import type { CreatePaymentRequest } from '../../../types'
 
 export default function PaymentsPage() {
-  const { data: subscriptions = [] } = useGetSubscriptionsQuery()
-  const { data: plans = [] } = useGetPlansQuery()
-  const { data: subscribers = [] } = useGetSubscribersQuery()
+  const t = useI18n()
+  const { show: showNotification } = useNotification()
+  const { data: subscriptionsData } = useGetSubscriptionsQuery()
+  const { data: plansData } = useGetPlansQuery()
+  const { data: subscribersData } = useGetSubscribersQuery()
+  const subscriptions = Array.isArray(subscriptionsData) ? subscriptionsData : []
+  const plans = Array.isArray(plansData) ? plansData : []
+  const subscribers = Array.isArray(subscribersData) ? subscribersData : []
   const [createPayment] = useCreatePaymentMutation()
   const [updatePayment] = useUpdatePaymentMutation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null)
   const [formError, setFormError] = useState('')
-  const { notifications, show, remove } = useNotification()
 
   const [formData, setFormData] = useState({
     subscription_id: '',
@@ -27,10 +33,11 @@ export default function PaymentsPage() {
   })
 
   // Fetch payments for selected subscription
-  const { data: payments = [], isLoading } = useGetPaymentsQuery(
+  const { data: paymentsData, isLoading } = useGetPaymentsQuery(
     selectedSubscriptionId || '',
     { skip: !selectedSubscriptionId }
   )
+  const payments = Array.isArray(paymentsData) ? paymentsData : []
 
   const handleOpenModal = (subscriptionId?: string) => {
     setFormError('')
@@ -63,7 +70,7 @@ export default function PaymentsPage() {
     setFormError('')
 
     if (!formData.subscription_id || !formData.amount) {
-      setFormError('Preencha todos os campos obrigatórios')
+      setFormError(t('validation.requiredFields'))
       return
     }
 
@@ -76,12 +83,12 @@ export default function PaymentsPage() {
         data.gateway_transaction_id = formData.gateway_transaction_id
       }
       await createPayment(data).unwrap()
-      show('Pagamento registrado!', 'success')
+      showNotification(t('success.paymentCreated'), 'success')
       handleCloseModal()
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao criar'
+      const errorMsg = mapApiError(err)
       setFormError(errorMsg)
-      show(errorMsg, 'error')
+      showNotification(errorMsg, 'error')
     }
   }
 
@@ -89,11 +96,12 @@ export default function PaymentsPage() {
     try {
       await updatePayment({
         id: paymentId,
-        data: { status: newStatus as any },
+        status: newStatus,
       }).unwrap()
-      show('Status atualizado!', 'success')
+      showNotification(t('success.paymentUpdated'), 'success')
     } catch (err: any) {
-      show(err?.data?.error || 'Erro ao atualizar', 'error')
+      const errorMsg = mapApiError(err)
+      showNotification(errorMsg, 'error')
     }
   }
 
@@ -276,8 +284,6 @@ export default function PaymentsPage() {
           </div>
         </form>
       </Modal>
-
-      <NotificationContainer notifications={notifications} onRemove={remove} />
     </div>
   )
 }

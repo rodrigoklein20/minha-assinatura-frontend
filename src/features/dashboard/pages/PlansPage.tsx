@@ -1,19 +1,23 @@
 import { useState } from 'react'
 import { useGetPlansQuery, useCreatePlanMutation, useUpdatePlanMutation, useDeletePlanMutation } from '@services/plansApi'
-import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { useNotification } from '@hooks/useNotification'
+import { useI18n } from '@hooks/useI18n'
 import Modal from '@components/Modal'
 import LoadingSpinner from '@components/LoadingSpinner'
+import { mapApiError } from '@utils/errorMapper'
 import type { Plan, CreatePlanRequest, UpdatePlanRequest } from '../../../types'
 
 export default function PlansPage() {
-  const { data: plans = [], isLoading } = useGetPlansQuery()
+  const t = useI18n()
+  const { show: showNotification } = useNotification()
+  const { data: plansData, isLoading } = useGetPlansQuery()
+  const plans = Array.isArray(plansData) ? plansData : []
   const [createPlan] = useCreatePlanMutation()
   const [updatePlan] = useUpdatePlanMutation()
   const [deletePlan] = useDeletePlanMutation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null)
   const [formError, setFormError] = useState('')
-  const { notifications, show, remove } = useNotification()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -75,7 +79,7 @@ export default function PlansPage() {
     setFormError('')
 
     if (!formData.name || !formData.slug || !formData.price) {
-      setFormError('Preencha todos os campos obrigatórios')
+      setFormError(t('validation.requiredFields'))
       return
     }
 
@@ -89,11 +93,11 @@ export default function PlansPage() {
           description: formData.description,
           active: formData.active,
         }
-        if (formData.image) {
+        if (formData.image && formData.image !== editingPlan.image) {
           updateData.image = formData.image
         }
         await updatePlan({ id: editingPlan.id, data: updateData }).unwrap()
-        show('Plano atualizado com sucesso!', 'success')
+        showNotification(t('success.planUpdated'), 'success')
       } else {
         const createData: CreatePlanRequest = {
           name: formData.name,
@@ -101,28 +105,28 @@ export default function PlansPage() {
           price: parseFloat(formData.price),
           billing_cycle: formData.billing_cycle,
           description: formData.description,
-          image: formData.image,
+          image: formData.image || undefined,
           active: formData.active,
         }
         await createPlan(createData).unwrap()
-        show('Plano criado com sucesso!', 'success')
+        showNotification(t('success.planCreated'), 'success')
       }
       handleCloseModal()
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao salvar plano'
+      const errorMsg = mapApiError(err)
       setFormError(errorMsg)
-      show(errorMsg, 'error')
+      showNotification(errorMsg, 'error')
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja deletar este plano?')) {
+    if (confirm(t('plans.deleteConfirm'))) {
       try {
         await deletePlan(id).unwrap()
-        show('Plano deletado com sucesso!', 'success')
+        showNotification(t('success.planDeleted'), 'success')
       } catch (err: any) {
-        const errorMsg = err?.data?.error || 'Erro ao deletar plano'
-        show(errorMsg, 'error')
+        const errorMsg = mapApiError(err)
+        showNotification(errorMsg, 'error')
       }
     }
   }
@@ -133,9 +137,10 @@ export default function PlansPage() {
         id: plan.id,
         data: { active: !plan.active },
       }).unwrap()
-      show(plan.active ? 'Plano desativado' : 'Plano ativado', 'success')
+      showNotification(plan.active ? 'Plano desativado' : 'Plano ativado', 'success')
     } catch (err: any) {
-      show(err?.data?.error || 'Erro ao atualizar plano', 'error')
+      const errorMsg = mapApiError(err)
+      showNotification(errorMsg, 'error')
     }
   }
 
@@ -161,9 +166,15 @@ export default function PlansPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {plans.map((plan) => (
             <div key={plan.id} className="card overflow-hidden hover:shadow-lg transition">
-              {plan.image && (
-                <img src={plan.image} alt={plan.name} className="w-full h-48 object-cover" />
-              )}
+              <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                {plan.image ? (
+                  <img src={`data:image/png;base64,${plan.image}`} alt={plan.name} className="w-full h-full object-cover" />
+                ) : (
+                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                )}
+              </div>
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{plan.name}</h3>
                 <p className="text-2xl font-bold text-blue-600 mb-1">
@@ -269,8 +280,7 @@ export default function PlansPage() {
               >
                 <option value="monthly">Mensal</option>
                 <option value="quarterly">Trimestral</option>
-                <option value="semi-annual">Semestral</option>
-                <option value="annual">Anual</option>
+                <option value="annually">Anual</option>
               </select>
             </div>
           </div>
@@ -325,8 +335,6 @@ export default function PlansPage() {
           </div>
         </form>
       </Modal>
-
-      <NotificationContainer notifications={notifications} onRemove={remove} />
     </div>
   )
 }

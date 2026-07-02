@@ -16,11 +16,11 @@ export function mapApiError(error: any): string {
   // Se não há erro, retorna mensagem padrão
   if (!error) return translations.errors.DEFAULT
 
-  // Extrai informações do erro
+  // Extrai informações do erro - segue padrão: { errors: [{ code, message, field }] }
   const status = error.status
   const errors = error?.data?.errors
   const errorCode = errors?.[0]?.code
-  const errorDetail = errors?.[0]?.detail
+  const errorMessage = errors?.[0]?.message
 
   // Prioridade 1: Se há um code de erro específico da API, usa o mapeamento
   if (errorCode) {
@@ -28,9 +28,9 @@ export function mapApiError(error: any): string {
     if (mapped) return mapped
   }
 
-  // Prioridade 2: Se há detalhe em inglês do erro da API, retorna como está
-  if (errorDetail) {
-    return errorDetail
+  // Prioridade 2: Se há uma mensagem em português do backend, retorna como está
+  if (errorMessage) {
+    return errorMessage
   }
 
   // Prioridade 3: Mapeia por status HTTP (converte para string)

@@ -4,9 +4,13 @@ import { useGetSubscriptionsQuery } from '@services/subscriptionsApi'
 import LoadingSpinner from '@components/LoadingSpinner'
 
 export default function DashboardPage() {
-  const { data: plans = [], isLoading: plansLoading } = useGetPlansQuery()
-  const { data: subscribers = [], isLoading: subscribersLoading } = useGetSubscribersQuery()
-  const { data: subscriptions = [], isLoading: subscriptionsLoading } = useGetSubscriptionsQuery()
+  const { data: plansData, isLoading: plansLoading } = useGetPlansQuery()
+  const { data: subscribersData, isLoading: subscribersLoading } = useGetSubscribersQuery()
+  const { data: subscriptionsData, isLoading: subscriptionsLoading } = useGetSubscriptionsQuery()
+
+  const plans = Array.isArray(plansData) ? plansData : []
+  const subscribers = Array.isArray(subscribersData) ? subscribersData : []
+  const subscriptions = Array.isArray(subscriptionsData) ? subscriptionsData : []
 
   const isLoading = plansLoading || subscribersLoading || subscriptionsLoading
 

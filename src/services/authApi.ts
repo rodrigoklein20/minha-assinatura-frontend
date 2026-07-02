@@ -6,14 +6,14 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<{ data: LoginResponse }, LoginRequest>({
       query: (credentials) => ({
         url: '/api/v1/auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
-    signup: builder.mutation<LoginResponse, SignupRequest>({
+    signup: builder.mutation<{ data: LoginResponse }, SignupRequest>({
       query: (data) => ({
         url: '/api/v1/users',
         method: 'POST',

@@ -2,20 +2,26 @@ import { useState } from 'react'
 import { useGetSubscriptionsQuery, useCreateSubscriptionMutation, useCancelSubscriptionMutation } from '@services/subscriptionsApi'
 import { useGetPlansQuery } from '@services/plansApi'
 import { useGetSubscribersQuery } from '@services/subscribersApi'
-import useNotification, { NotificationContainer } from '@hooks/useNotification'
+import { useNotification } from '@hooks/useNotification'
+import { useI18n } from '@hooks/useI18n'
 import Modal from '@components/Modal'
 import LoadingSpinner from '@components/LoadingSpinner'
+import { mapApiError } from '@utils/errorMapper'
 import type { CreateSubscriptionRequest } from '../../../types'
 
 export default function SubscriptionsPage() {
-  const { data: subscriptions = [], isLoading } = useGetSubscriptionsQuery()
-  const { data: plans = [] } = useGetPlansQuery()
-  const { data: subscribers = [] } = useGetSubscribersQuery()
+  const t = useI18n()
+  const { show: showNotification } = useNotification()
+  const { data: subscriptionsData, isLoading } = useGetSubscriptionsQuery()
+  const subscriptions = Array.isArray(subscriptionsData) ? subscriptionsData : []
+  const { data: plansData } = useGetPlansQuery()
+  const { data: subscribersData } = useGetSubscribersQuery()
+  const plans = Array.isArray(plansData) ? plansData : []
+  const subscribers = Array.isArray(subscribersData) ? subscribersData : []
   const [createSubscription] = useCreateSubscriptionMutation()
   const [cancelSubscription] = useCancelSubscriptionMutation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formError, setFormError] = useState('')
-  const { notifications, show, remove } = useNotification()
 
   const [formData, setFormData] = useState({
     subscriber_id: '',
@@ -43,7 +49,7 @@ export default function SubscriptionsPage() {
     setFormError('')
 
     if (!formData.subscriber_id || !formData.plan_id || !formData.start_date) {
-      setFormError('Preencha todos os campos')
+      setFormError(t('validation.requiredFields'))
       return
     }
 
@@ -54,22 +60,23 @@ export default function SubscriptionsPage() {
         start_date: formData.start_date,
       }
       await createSubscription(data).unwrap()
-      show('Assinatura criada!', 'success')
+      showNotification(t('success.subscriptionCreated'), 'success')
       handleCloseModal()
     } catch (err: any) {
-      const errorMsg = err?.data?.error || 'Erro ao criar'
+      const errorMsg = mapApiError(err)
       setFormError(errorMsg)
-      show(errorMsg, 'error')
+      showNotification(errorMsg, 'error')
     }
   }
 
   const handleCancel = async (id: string) => {
-    if (confirm('Cancelar esta assinatura?')) {
+    if (confirm(t('subscriptions.cancelConfirm'))) {
       try {
         await cancelSubscription({ id, data: { reason: 'Cancelamento manual' } }).unwrap()
-        show('Assinatura cancelada!', 'success')
+        showNotification(t('success.subscriptionCancelled'), 'success')
       } catch (err: any) {
-        show(err?.data?.error || 'Erro ao cancelar', 'error')
+        const errorMsg = mapApiError(err)
+        showNotification(errorMsg, 'error')
       }
     }
   }
@@ -212,8 +219,6 @@ export default function SubscriptionsPage() {
           </div>
         </form>
       </Modal>
-
-      <NotificationContainer notifications={notifications} onRemove={remove} />
     </div>
   )
 }

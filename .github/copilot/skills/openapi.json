@@ -1,5 +1,7 @@
 {
-    "schemes": ["http"],
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "Plataforma de assinaturas de serviços - Gerenciamento de planos, assinantes e pagamentos",
@@ -42,19 +44,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_REQUEST",
+                        "description": "Bad Request - INVALID_REQUEST",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized - Possible codes: INVALID_CREDENTIAL",
+                        "description": "Unauthorized - INVALID_CREDENTIAL",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR, INTERNAL_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR, INTERNAL_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -64,6 +66,11 @@
         },
         "/api/v1/payments": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Record a new payment for a subscription",
                 "consumes": [
                     "application/json"
@@ -128,6 +135,11 @@
         },
         "/api/v1/payments/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get a specific payment by ID",
                 "produces": [
                     "application/json"
@@ -173,6 +185,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Update payment status (paid, failed, refunded)",
                 "produces": [
                     "application/json"
@@ -205,31 +222,31 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_FORMAT, INVALID_PARAMETER",
+                        "description": "Bad Request - INVALID_FORMAT, INVALID_PARAMETER",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "description": "Unauthorized - UNAUTHORIZED",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - FORBIDDEN",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -239,6 +256,11 @@
         },
         "/api/v1/plans": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get all plans for authenticated user. Each plan's image field contains base64-encoded binary data or is omitted if no image is set.",
                 "produces": [
                     "application/json"
@@ -254,14 +276,8 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.ListPlansResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -269,6 +285,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Create a new billing plan. Images should be sent as base64-encoded strings.",
                 "consumes": [
                     "application/json"
@@ -299,19 +320,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "description": "Bad Request - Invalid base64 image format",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -321,6 +336,11 @@
         },
         "/api/v1/plans/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get a specific plan by ID. If the plan has an image, it will be returned as a base64-encoded string. To render the image in a web browser, use: \u003cimg src=\"data:image/png;base64,{image_value}\" /\u003e (replace 'png' with actual format if needed).",
                 "produces": [
                     "application/json"
@@ -345,26 +365,20 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.PlanResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - plan belongs to another user",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Plan not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -372,6 +386,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Update plan details. To update the image, send it as a base64-encoded string in the 'image' field. Omit the 'image' field to keep the existing image unchanged. Pass empty string in 'image' to remove/clear the image.",
                 "consumes": [
                     "application/json"
@@ -409,31 +428,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER, INVALID_REQUEST, INVALID_FORMAT",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Bad Request - Invalid base64 image format",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Plan not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -441,6 +448,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Delete a plan. This will permanently delete the plan and any associated image data.",
                 "produces": [
                     "application/json"
@@ -468,32 +480,14 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Plan not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -528,13 +522,13 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Store not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -569,13 +563,13 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Store not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -585,6 +579,11 @@
         },
         "/api/v1/subscribers": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get all subscribers for authenticated user",
                 "produces": [
                     "application/json"
@@ -600,14 +599,8 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.ListSubscribersResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -615,6 +608,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Create a new customer/subscriber",
                 "consumes": [
                     "application/json"
@@ -645,19 +643,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -667,6 +659,11 @@
         },
         "/api/v1/subscribers/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get a specific subscriber by ID",
                 "produces": [
                     "application/json"
@@ -691,32 +688,20 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriberResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - subscriber belongs to another user",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscriber not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -724,6 +709,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Update subscriber details",
                 "consumes": [
                     "application/json"
@@ -761,31 +751,25 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER, INVALID_REQUEST, INVALID_FORMAT",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - subscriber belongs to another user",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscriber not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -793,6 +777,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Delete a subscriber",
                 "produces": [
                     "application/json"
@@ -820,32 +809,20 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - subscriber belongs to another user",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscriber not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -855,6 +832,11 @@
         },
         "/api/v1/subscriptions": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get all active subscriptions for authenticated user",
                 "produces": [
                     "application/json"
@@ -870,14 +852,8 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.ListSubscriptionsResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -885,6 +861,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Create a new subscription for a subscriber to a plan",
                 "consumes": [
                     "application/json"
@@ -915,19 +896,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_REQUEST, INVALID_FORMAT",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -937,6 +912,11 @@
         },
         "/api/v1/subscriptions/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get a specific subscription by ID",
                 "produces": [
                     "application/json"
@@ -961,32 +941,20 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Forbidden - subscription belongs to another user",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscription not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1029,31 +997,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscription not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1063,6 +1019,11 @@
         },
         "/api/v1/subscriptions/{id}/cancel": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Cancel an active subscription",
                 "consumes": [
                     "application/json"
@@ -1099,32 +1060,14 @@
                             "$ref": "#/definitions/minha-assinatura_internal_dto.SubscriptionResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request - Possible codes: INVALID_PARAMETER",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Possible codes: UNAUTHORIZED",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden - Possible codes: FORBIDDEN",
-                        "schema": {
-                            "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
-                        }
-                    },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Subscription not found",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1134,6 +1077,11 @@
         },
         "/api/v1/subscriptions/{subscription_id}/payments": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get all payments for a subscription",
                 "produces": [
                     "application/json"
@@ -1159,13 +1107,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "description": "Bad Request - INVALID_FORMAT",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1199,7 +1147,7 @@
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1237,13 +1185,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
+                        "description": "Bad Request - INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1278,19 +1226,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "description": "Bad Request - INVALID_FORMAT",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1298,6 +1246,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Update user profile information",
                 "consumes": [
                     "application/json"
@@ -1335,19 +1288,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_FORMAT, INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
+                        "description": "Bad Request - INVALID_FORMAT, INVALID_REQUEST, RESOURCE_ALREADY_EXISTS",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1355,6 +1308,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Delete a user account",
                 "produces": [
                     "application/json"
@@ -1380,19 +1338,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request - Possible codes: INVALID_FORMAT",
+                        "description": "Bad Request - INVALID_FORMAT",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found - Possible codes: RESOURCE_NOT_FOUND",
+                        "description": "Not Found - RESOURCE_NOT_FOUND",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error - Possible codes: DATABASE_ERROR",
+                        "description": "Internal Server Error - DATABASE_ERROR",
                         "schema": {
                             "$ref": "#/definitions/minha-assinatura_internal_responses.ErrorResponse"
                         }
@@ -1822,7 +1780,7 @@
     "securityDefinitions": {
         "Bearer": {
             "type": "apiKey",
-            "name": "Authorization",
+            "name": "Authorization//\t@description\t\t\t\t\"JWT token format: Bearer {token}\"",
             "in": "header"
         }
     }

@@ -9,10 +9,12 @@ export const plansApi = createApi({
   endpoints: (builder) => ({
     getPlans: builder.query<Plan[], void>({
       query: () => '/api/v1/plans',
+      transformResponse: (response: { data: Plan[] }) => response.data,
       providesTags: ['Plans'],
     }),
     getPlan: builder.query<Plan, string>({
       query: (id) => `/api/v1/plans/${id}`,
+      transformResponse: (response: { data: Plan }) => response.data,
       providesTags: ['Plans'],
     }),
     createPlan: builder.mutation<Plan, CreatePlanRequest>({
@@ -21,6 +23,7 @@ export const plansApi = createApi({
         method: 'POST',
         body: data,
       }),
+      transformResponse: (response: { data: Plan }) => response.data,
       invalidatesTags: ['Plans'],
     }),
     updatePlan: builder.mutation<Plan, { id: string; data: UpdatePlanRequest }>({
@@ -29,6 +32,7 @@ export const plansApi = createApi({
         method: 'PUT',
         body: data,
       }),
+      transformResponse: (response: { data: Plan }) => response.data,
       invalidatesTags: ['Plans'],
     }),
     deletePlan: builder.mutation<void, string>({

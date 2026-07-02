@@ -19,10 +19,12 @@ export const useAuth = () => {
     async (credentials: LoginRequest) => {
       try {
         const response = await loginMutation(credentials).unwrap()
-        dispatch(setToken(response.token))
-        dispatch(setUser(response.user))
+        dispatch(setToken(response.data.token))
+        if (response.data.user) {
+          dispatch(setUser(response.data.user))
+        }
         navigate('/dashboard')
-        return response
+        return response.data
       } catch (err) {
         console.error('Login error:', err)
         const friendlyMessage = mapApiError(err)
@@ -37,10 +39,12 @@ export const useAuth = () => {
     async (data: SignupRequest) => {
       try {
         const response = await signupMutation(data).unwrap()
-        dispatch(setToken(response.token))
-        dispatch(setUser(response.user))
+        dispatch(setToken(response.data.token))
+        if (response.data.user) {
+          dispatch(setUser(response.data.user))
+        }
         navigate('/dashboard')
-        return response
+        return response.data
       } catch (err) {
         console.error('Signup error:', err)
         const friendlyMessage = mapApiError(err)
@@ -56,7 +60,7 @@ export const useAuth = () => {
     navigate('/auth/login')
   }, [dispatch, navigate])
 
-  const isAuthenticated = !!token && !!user
+  const isAuthenticated = !!token
 
   return {
     token,

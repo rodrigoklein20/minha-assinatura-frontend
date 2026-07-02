@@ -8,7 +8,7 @@ interface NotificationData {
   type: NotificationType
 }
 
-const useNotification = () => {
+export const useNotification = () => {
   const [notifications, setNotifications] = useState<NotificationData[]>([])
 
   const show = useCallback((message: string, type: NotificationType = 'info') => {
