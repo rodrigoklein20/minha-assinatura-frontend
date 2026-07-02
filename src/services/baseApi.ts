@@ -27,10 +27,16 @@ export const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions)
 
   if (result.error && result.error.status === 401) {
-    // Token expirado ou inválido
-    // Limpar token e redirecionar para login é feito via hook na aplicação
-    localStorage.removeItem('auth_token')
-    window.location.href = '/auth/login'
+    const state = api.getState() as RootState
+    const hasToken = !!state.auth.token
+
+    // Se há token e recebe 401, significa que o token expirou
+    // Se NÃO há token, é erro durante login (INVALID_CREDENTIAL) - não deve redirecionar
+    if (hasToken) {
+      // Token expirado ou inválido
+      localStorage.removeItem('auth_token')
+      window.location.href = '/auth/login'
+    }
   }
 
   return result
