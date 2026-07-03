@@ -9,7 +9,7 @@ export const plansApi = createApi({
   endpoints: (builder) => ({
     getPlans: builder.query<Plan[], void>({
       query: () => '/api/v1/plans',
-      transformResponse: (response: { data: Plan[] }) => response.data,
+      transformResponse: (response: { data: { plans: Plan[] } }) => response.data.plans,
       providesTags: ['Plans'],
     }),
     getPlan: builder.query<Plan, string>({

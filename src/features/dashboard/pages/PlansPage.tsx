@@ -157,7 +157,7 @@ export default function PlansPage() {
 
       {plans.length === 0 ? (
         <div className="card p-12 text-center">
-          <p className="text-gray-500 text-lg mb-4">Nenhum plano criado yet</p>
+          <p className="text-gray-500 text-lg mb-4">Nenhum plano criado ainda</p>
           <button onClick={() => handleOpenModal()} className="btn-primary">
             Criar Primeiro Plano
           </button>
